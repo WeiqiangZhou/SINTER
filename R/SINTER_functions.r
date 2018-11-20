@@ -490,3 +490,31 @@ k_in=20,sigma_in=0.1,dim=3,dist_scale_in=10,subsample=FALSE,MNN_opt=TRUE,tol_er=
   }
 
 }
+
+
+#' @title Run MNN to correct for platform effects
+#' @description This function is used run MNN to correct for platform effects between the experimental and predicted scATAC-seq data.
+#' @param atac_data scATAC-seq data for matching.
+#' @param pre_result Predicted scATAC-seq data based on scRNA-seq.
+#' @param k The number of mutual nearest neighbor in MNN.
+#' @param sigma The bandwidth of the Gaussian smoothing kernel used to compute the correction vector.
+#' @return
+#'  \item{data_combine}{The combined data matrix from all single cells.}
+#' @keywords MNN
+#' @examples
+#' \dontrun{
+#' data_combine <- run_MNN(atac_data,pre_result,k=param_opt$k_opt,sigma=param_opt$sigma_opt)
+#' }
+#' @export
+run_MNN <- function(atac_data,pre_result,k,sigma){
+  
+  pre_result_sd <- pre_result - rowMeans(pre_result)
+  colnames(pre_result_sd) <- colnames(pre_result)
+  row.names(pre_result_sd) <- row.names(atac_data)
+  
+  data_MNN <- mnnCorrect(atac_data_filter,pre_result_sd,k,sigma)
+  
+  data_combine <- cbind(data_MNN$corrected[[1]],data_MNN$corrected[[2]])
+  colnames(data_combine) <- c(colnames(atac_data),colnames(pre_result_sd))
+  return(data_combine)
+}
