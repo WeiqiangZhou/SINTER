@@ -1,2 +1,2 @@
 # SINTER
-a tool for single-cell genomic data integration
+SINTER is a tool for single-cell genomic data integration
