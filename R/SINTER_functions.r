@@ -512,7 +512,7 @@ run_MNN <- function(atac_data,pre_result,k,sigma){
   colnames(pre_result_sd) <- colnames(pre_result)
   row.names(pre_result_sd) <- row.names(atac_data)
   
-  data_MNN <- mnnCorrect(atac_data_filter,pre_result_sd,k,sigma)
+  data_MNN <- mnnCorrect(atac_data,pre_result_sd,k,sigma)
   
   data_combine <- cbind(data_MNN$corrected[[1]],data_MNN$corrected[[2]])
   colnames(data_combine) <- c(colnames(atac_data),colnames(pre_result_sd))
