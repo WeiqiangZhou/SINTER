@@ -18,7 +18,7 @@ devtools::install_github("WeiqiangZhou/SINTER")
 ##load SINTER
 library(SINTER)
 
-##load example data training data
+##load example training data
 DNase_train <- DNase_hg19_cluster_2000_example
 RNA_train <- RNA_hg19_example
 
