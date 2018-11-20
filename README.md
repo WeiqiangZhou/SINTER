@@ -42,20 +42,15 @@ param_opt <- predict_opt(atac_data_filter,expr_data_select$expr_select,DNase_tra
 pre_result <- pre_model(expr_data_select$expr_select,DNase_train[atac_select_idx,],expr_data_select$RNA_train_select,
   num_predictor=param_opt$num_predictor_opt,cluster_scale=param_opt$cluster_scale_opt)
 
-pre_result_sd <- pre_result - rowMeans(pre_result)
-colnames(pre_result_sd) <- colnames(pre_result)
-row.names(pre_result_sd) <- row.names(atac_data_filter)
-
 ##run MNN correction
-data_MNN <- mnnCorrect(atac_data_filter,pre_result_sd,k=param_opt$k_opt,sigma=param_opt$sigma_opt)
+data_combine <- run_MNN(atac_data_filter,pre_result,k=param_opt$k_opt,sigma=param_opt$sigma_opt)
 
-##combine data and perform dimension reduction
-data_combine <- cbind(data_MNN$corrected[[1]],data_MNN$corrected[[2]])
-colnames(data_combine) <- c(colnames(atac_data_filter),colnames(pre_result_sd))
-
+##perform dimension reduction
 data_pc <- prcomp(t(data_combine),center = T, scale = T)$x
 
 ##generate a plot to showing the matching results
+library(ggplot2)
+
 cell_idx <- rep(NA,ncol(data_combine))
 cell_idx[grep("H1",colnames(data_combine))] <- "H1"
 cell_idx[grep("GM12878",colnames(data_combine))] <- "GM12878"
