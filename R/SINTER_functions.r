@@ -5,6 +5,7 @@
 #' @import ggplot2
 #' @import parallel
 #' @import GenomicAlignments
+#' @import GenomicRanges
 
 #' @title Summarize single-cell ATAC-seq data according to ENCODE cluster features
 #' @description This function is used for summarizing scATAC-seq data according to ENCODE clusters.
