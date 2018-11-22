@@ -3,6 +3,7 @@
 #' @import preprocessCore
 #' @import scran
 #' @import GenomicAlignments
+#' @import GenomicRanges
 #' @import ggplot2
 #' @import parallel
 
@@ -507,11 +508,11 @@ k_in=20,sigma_in=0.1,dim=3,dist_scale_in=10,subsample=FALSE,MNN_opt=TRUE,tol_er=
 #' }
 #' @export
 run_MNN <- function(atac_data,pre_result,k,sigma){
-  
+
   pre_result_sd <- pre_result - rowMeans(pre_result)
   colnames(pre_result_sd) <- colnames(pre_result)
   row.names(pre_result_sd) <- row.names(atac_data)
-  
+
   data_MNN <- mnnCorrect(atac_data,pre_result_sd,k=k,sigma=sigma)
 
   data_combine <- cbind(data_MNN$corrected[[1]],data_MNN$corrected[[2]])
