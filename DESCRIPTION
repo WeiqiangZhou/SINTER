@@ -6,7 +6,7 @@ Author: Weiqiang Zhou, Hongkai Ji
 Maintainer: Weiqiang Zhou <wzhou14@jhu.edu>
 Description: SINTER.
 URL: https://github.com/WeiqiangZhou/SINTER
-Depends: R (>= 3.2.3), GenomicAlignments
+Depends: R (>= 3.2.3)
 License: GPL(>=2)
 Encoding: UTF-8
 LazyData: true
