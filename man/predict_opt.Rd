@@ -8,8 +8,8 @@ predict_opt(atac_data, expr_data, DNase_train, RNA_train,
   num_predictor = c(25, 25, 30), cluster_scale = c(10, 20, 50),
   k_range = c(20:29), sigma_range = c(0.01, 1), k_in = 20,
   sigma_in = 0.1, dim = 3, dist_scale_in = 10, subsample = FALSE,
-  MNN_opt = TRUE, MNN_ref = "scATAC", tol_er = 0.001, ncore = 10,
-  seed = 12345)
+  MNN_opt = TRUE, fast = FALSE, MNN_ref = "scATAC", tol_er = 0.001,
+  ncore = 10, seed = 12345)
 }
 \arguments{
 \item{atac_data}{scATAC-seq data for matching.}
@@ -39,6 +39,8 @@ predict_opt(atac_data, expr_data, DNase_train, RNA_train,
 \item{subsample}{A percentage value to determine whether the paramter searching should be done in a subset of cells instead of using all cells. Set subsample=FALSE to use all cells.}
 
 \item{MNN_opt}{A flag to determine whether the parameters search should be performed for MNN.}
+
+\item{fast}{A flag indicates whether or not to use a fast neighbor_test.}
 
 \item{MNN_ref}{A flag to determine which data type is used as reference in MNN. Select from "scATAC" and "scRNA".}
 

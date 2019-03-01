@@ -5,7 +5,8 @@
 \title{Search for the optimal parameters for MNN}
 \usage{
 mnn_opt(data_ref, data_in, k_range = c(16:25), sigma_range = c(0.01, 1),
-  dim = 3, dist_scale_in = 10, tol_er = 0.001, ncore = 10)
+  dim = 3, dist_scale_in = 10, tol_er = 0.001, ncore = 10,
+  fast = FALSE)
 }
 \arguments{
 \item{data_ref}{Single cell data from one data type as the reference for matching (e.g., scATAC-seq data).}
@@ -23,6 +24,8 @@ mnn_opt(data_ref, data_in, k_range = c(16:25), sigma_range = c(0.01, 1),
 \item{tol_er}{The desired accuracy in function optimize.}
 
 \item{ncore}{Number of CPU cores used for parallel processing. Use ncore = 1 to run the function without parallel processing.}
+
+\item{fast}{A flag indicates whether or not to use a fast neighbor_test.}
 }
 \value{
 \item{k_opt}{The optimal value for k.}

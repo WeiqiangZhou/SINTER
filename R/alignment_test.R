@@ -61,7 +61,7 @@ neighbor_test <- function(input_data,ref_data,dist_scale=10,print_message=TRUE){
 #' @keywords spacial test
 #' @examples
 #' \dontrun{
-#' neighbor_test_p <- neighbor_test(input_data,ref_data,dist_scale=10)$pval
+#' neighbor_test_p <- neighbor_test_fast(input_data,ref_data,dist_scale=10)$pval
 #' }
 #' @export
 neighbor_test_fast <- function(input_data,ref_data,dist_scale=10,print_message=TRUE){
