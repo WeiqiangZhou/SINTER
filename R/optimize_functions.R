@@ -1,11 +1,16 @@
 #' @export
-opt_fun <- function(param_est,k_in,ref_data,input_data,num_pc,dist_scale_in){
+opt_fun <- function(param_est,k_in,ref_data,input_data,num_pc,dist_scale_in,fast=FALSE){
   
   MNN_result <- mnnCorrect(ref_data,input_data,k=k_in,sigma=param_est,svd.dim=0)
   data_combine <- cbind(MNN_result$corrected[[1]],MNN_result$corrected[[2]])
   data_pc <- prcomp(t(data_combine),center = T, scale = T)$x
-  neighbor_test_p <- neighbor_test(data_pc[-c(1:ncol(ref_data)),1:num_pc],data_pc[1:ncol(ref_data),1:num_pc],dist_scale=dist_scale_in,print_message=FALSE)$pval
-  output <- mean(neighbor_test_p)
+  if(fast==FALSE){
+    neighbor_test_p <- neighbor_test(data_pc[-c(1:ncol(ref_data)),1:num_pc],data_pc[1:ncol(ref_data),1:num_pc],dist_scale=dist_scale_in,print_message=FALSE)$pval
+    output <- mean(neighbor_test_p)
+  }
+  else{
+    output <- neighbor_test_fast(data_pc[-c(1:ncol(ref_data)),1:num_pc],data_pc[1:ncol(ref_data),1:num_pc],dist_scale=dist_scale_in,print_message=FALSE)$pval
+  }
   return(output)
 }
 
@@ -21,6 +26,7 @@ opt_fun <- function(param_est,k_in,ref_data,input_data,num_pc,dist_scale_in){
 #' @param dist_scale_in Scale used to define the radius of the region for testing.
 #' @param tol_er The desired accuracy in function optimize.
 #' @param ncore Number of CPU cores used for parallel processing. Use ncore = 1 to run the function without parallel processing.
+#' @param fast A flag indicates whether or not to use a fast neighbor_test.
 #' @return
 #'  \item{k_opt}{The optimal value for k.}
 #'  \item{sigma_opt}{The optimal value for sigma.}
@@ -31,18 +37,18 @@ opt_fun <- function(param_est,k_in,ref_data,input_data,num_pc,dist_scale_in){
 #' result_opt <- mnn_opt(data_ref,data_in,k_range=c(16:25),sigma_range=c(0.01,1),dim=3,dist_scale_in=10,tol_er=0.001,ncore=10)
 #' }
 #' @export
-mnn_opt <- function(data_ref,data_in,k_range=c(16:25),sigma_range=c(0.01,1),dim=3,dist_scale_in=10,tol_er=0.001,ncore=10){
+mnn_opt <- function(data_ref,data_in,k_range=c(16:25),sigma_range=c(0.01,1),dim=3,dist_scale_in=10,tol_er=0.001,ncore=10,fast=FALSE){
   
   if(ncore > 1){
     opt_result <- mclapply(k_range,function(x){
       print(paste0("Using k=",x," mutual nearest neighbors"))
-      optimize(opt_fun, sigma_range, x, data_ref, data_in, dim, dist_scale_in, maximum=TRUE, tol = tol_er)
+      optimize(opt_fun, sigma_range, x, data_ref, data_in, dim, dist_scale_in, fast, maximum=TRUE, tol = tol_er)
     },mc.cores=ncore)
   }
   else{
     opt_result <- lapply(k_range,function(x){
       print(paste0("Using k=",x," mutual nearest neighbors"))
-      optimize(opt_fun, sigma_range, x, data_ref, data_in, dim, dist_scale_in, maximum=TRUE, tol = tol_er)
+      optimize(opt_fun, sigma_range, x, data_ref, data_in, dim, dist_scale_in, fast, maximum=TRUE, tol = tol_er)
     })
   }
   
@@ -75,6 +81,7 @@ mnn_opt <- function(data_ref,data_in,k_range=c(16:25),sigma_range=c(0.01,1),dim=
 #' @param dist_scale_in Scale used to define the radius of the region for testing.
 #' @param subsample A percentage value to determine whether the paramter searching should be done in a subset of cells instead of using all cells. Set subsample=FALSE to use all cells.
 #' @param MNN_opt A flag to determine whether the parameters search should be performed for MNN.
+#' @param fast A flag indicates whether or not to use a fast neighbor_test.
 #' @param MNN_ref A flag to determine which data type is used as reference in MNN. Select from "scATAC" and "scRNA".
 #' @param tol_er The desired accuracy in function optimize.
 #' @param ncore Number of CPU cores used for parallel processing. Use ncore = 1 to run the function without parallel processing.
@@ -93,7 +100,7 @@ mnn_opt <- function(data_ref,data_in,k_range=c(16:25),sigma_range=c(0.01,1),dim=
 #' }
 #' @export
 predict_opt <- function(atac_data,expr_data,DNase_train,RNA_train,num_predictor=c(25,25,30),cluster_scale=c(10,20,50),k_range=c(20:29),sigma_range=c(0.01,1),
-                        k_in=20,sigma_in=0.1,dim=3,dist_scale_in=10,subsample=FALSE,MNN_opt=TRUE,MNN_ref="scATAC",tol_er=0.001,ncore=10,seed=12345){
+                        k_in=20,sigma_in=0.1,dim=3,dist_scale_in=10,subsample=FALSE,MNN_opt=TRUE,fast=FALSE,MNN_ref="scATAC",tol_er=0.001,ncore=10,seed=12345){
   
   if(subsample!=FALSE){
     set.seed(seed)
@@ -113,18 +120,18 @@ predict_opt <- function(atac_data,expr_data,DNase_train,RNA_train,num_predictor=
       
       if(MNN_opt == TRUE){
         if(MNN_ref == "scATAC"){
-          return(unlist(mnn_opt(atac_data,pre_result_sd,k_range,sigma_range,dim,dist_scale_in,tol_er,ncore)))
+          return(unlist(mnn_opt(atac_data,pre_result_sd,k_range,sigma_range,dim,dist_scale_in,tol_er,ncore,fast)))
         }
         else{
-          return(unlist(mnn_opt(pre_result_sd,atac_data,k_range,sigma_range,dim,dist_scale_in,tol_er,ncore)))
+          return(unlist(mnn_opt(pre_result_sd,atac_data,k_range,sigma_range,dim,dist_scale_in,tol_er,ncore,fast)))
         }
       }
       else{
         if(MNN_ref == "scATAC"){
-          objective_value <- opt_fun(sigma_in,k_in,atac_data,pre_result_sd,dim,dist_scale_in)
+          objective_value <- opt_fun(sigma_in,k_in,atac_data,pre_result_sd,dim,dist_scale_in,fast)
         }
         else{
-          objective_value <- opt_fun(sigma_in,k_in,pre_result_sd,atac_data,dim,dist_scale_in)
+          objective_value <- opt_fun(sigma_in,k_in,pre_result_sd,atac_data,dim,dist_scale_in,fast)
         }
         print(paste0("objective = ",objective_value))
         return(objective_value)
