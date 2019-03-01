@@ -6,6 +6,7 @@
 #' @import parallel
 #' @import GenomicAlignments
 #' @import GenomicRanges
+#' @import irlba
 
 #' @title Summarize single-cell ATAC-seq data according to ENCODE cluster features
 #' @description This function is used for summarizing scATAC-seq data according to ENCODE clusters.
