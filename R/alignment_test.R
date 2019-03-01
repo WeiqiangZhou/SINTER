@@ -82,8 +82,8 @@ neighbor_test_fast <- function(input_data,ref_data,dist_scale=10,print_message=T
   input_count <- rowSums(input_dist_all < dist_search)
   ref_count <- rowSums(ref_dist_all < dist_search)
   
-  input_ref_ratio <- mean(input_count/ref_count)
-  ref_count_test <- median(ref_count)
+  input_ref_ratio <- median(input_count/(ref_count+1))
+  ref_count_test <- median(ref_count+1)
   input_count_test <- round(input_ref_ratio*median(ref_count_test))
   
   test_table <- matrix(c(input_count_test,ref_count_test,input_expect,ref_expect),
