@@ -54,7 +54,7 @@ mnn_opt <- function(data_ref,data_in,k_range=c(16:25),sigma_range=c(0.01,1),dim=
   
   opt_result_obj <- sapply(opt_result,function(x)x$objective)
   opt_result_sigma <- sapply(opt_result,function(x)x$maximum)
-  max_idx <- which(opt_result_obj==max(opt_result_obj))
+  max_idx <- which(opt_result_obj==max(opt_result_obj))[1]
   
   print(paste0("best k=",k_range[max_idx]))
   print(paste0("best sigma=",opt_result_sigma[max_idx]))
