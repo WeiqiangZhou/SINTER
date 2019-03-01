@@ -26,18 +26,15 @@ neighbor_test <- function(input_data,ref_data,dist_scale=10,print_message=TRUE){
   input_expect <- nrow(input_data)
   ref_expect <- nrow(ref_data)
   
-  input_count <- rep(NA,nrow(input_data))
-  ref_count <- rep(NA,nrow(input_data))
-  
   dist_all <- as.matrix(dist(rbind(input_data,ref_data)))
   input_dist_all <- dist_all[c(1:nrow(input_data)),c(1:nrow(input_data))]
   ref_dist_all <- dist_all[c(1:nrow(input_data)),-c(1:nrow(input_data))]
   
+  input_count <- rowSums(input_dist_all < dist_search)
+  ref_count <- rowSums(ref_dist_all < dist_search)
+  
   fisher_pval <- sapply(1:nrow(input_data),function(i){
     ##self included
-    input_count[i] <- length(which(input_dist_all[i,] < dist_search))
-    ref_count[i] <- length(which(ref_dist_all[i,] < dist_search))
-    
     test_table <- matrix(c(input_count[i],ref_count[i],input_expect,ref_expect),
                          nrow = 2,dimnames = list(c("input", "ref"),c("observe", "expect")))
     fisher.test(test_table)$p.value
