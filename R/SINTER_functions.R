@@ -339,18 +339,18 @@ eval_neighbor_test <- function(input_data,ref_data,input_mem,ref_mem,dist_scale=
 #' data_combine <- run_MNN(atac_data,pre_result,k=param_opt$k_opt,sigma=param_opt$sigma_opt,MNN_ref="scATAC")
 #' }
 #' @export
-run_MNN <- function(atac_data,pre_result,k,sigma,MNN_ref="scATAC"){
+run_MNN <- function(atac_data,pre_result,k,sigma,MNN_ref="scATAC",...){
 
   pre_result_sd <- pre_result - rowMeans(pre_result)
   colnames(pre_result_sd) <- colnames(pre_result)
   row.names(pre_result_sd) <- row.names(atac_data)
   
   if(MNN_ref == "scATAC"){
-    data_MNN <- mnnCorrect(atac_data,pre_result_sd,k=k,sigma=sigma)
+    data_MNN <- mnnCorrect(atac_data,pre_result_sd,k=k,sigma=sigma,...)
     data_combine <- cbind(data_MNN$corrected[[1]],data_MNN$corrected[[2]])
   }
   else{
-    data_MNN <- mnnCorrect(pre_result_sd,atac_data,k=k,sigma=sigma)
+    data_MNN <- mnnCorrect(pre_result_sd,atac_data,k=k,sigma=sigma,...)
     data_combine <- cbind(data_MNN$corrected[[2]],data_MNN$corrected[[1]])
   }
   
