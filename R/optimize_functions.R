@@ -3,7 +3,7 @@ opt_fun <- function(param_est,k_in,ref_data,input_data,num_pc,dist_scale_in,fast
   
   MNN_result <- mnnCorrect(ref_data,input_data,k=k_in,sigma=param_est,svd.dim=0)
   data_combine <- cbind(MNN_result$corrected[[1]],MNN_result$corrected[[2]])
-  data_pc <- prcomp_irlba(t(data_combine),center = T, scale = T)$x
+  data_pc <- prcomp_irlba(t(data_combine),n = num_pc, center = T, scale = T)$x
   if(fast==FALSE){
     neighbor_test_p <- neighbor_test(data_pc[-c(1:ncol(ref_data)),1:num_pc],data_pc[1:ncol(ref_data),1:num_pc],dist_scale=dist_scale_in,print_message=FALSE)$pval
     output <- mean(neighbor_test_p)
