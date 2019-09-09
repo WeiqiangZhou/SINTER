@@ -4,8 +4,8 @@
 \alias{mnn_opt}
 \title{Search for the optimal parameters for MNN}
 \usage{
-mnn_opt(data_ref, data_in, k_range = c(16:25), sigma_range = c(0.01, 1),
-  dim = 3, dist_scale_in = 10, tol_er = 0.001, ncore = 10,
+mnn_opt(data_ref, data_in, k_range = c(16:25), sigma_range = c(0.01,
+  1), dim = 3, dist_scale_in = 10, tol_er = 0.001, ncore = 10,
   fast = FALSE)
 }
 \arguments{

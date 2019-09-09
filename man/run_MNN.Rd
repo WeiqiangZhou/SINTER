@@ -4,7 +4,7 @@
 \alias{run_MNN}
 \title{Run MNN to correct for platform effects}
 \usage{
-run_MNN(atac_data, pre_result, k, sigma, MNN_ref = "scATAC")
+run_MNN(atac_data, pre_result, k, sigma, MNN_ref = "scATAC", ...)
 }
 \arguments{
 \item{atac_data}{scATAC-seq data for matching.}

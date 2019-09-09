@@ -4,9 +4,11 @@
 \alias{neighbor_test}
 \title{Evaluate the spacial discribution of the mixed single cells from different data types}
 \usage{
-neighbor_test(input_data, ref_data, dist_scale = 10, print_message = TRUE)
+neighbor_test(input_data, ref_data, dist_scale = 10,
+  print_message = TRUE)
 
-neighbor_test(input_data, ref_data, dist_scale = 10, print_message = TRUE)
+neighbor_test(input_data, ref_data, dist_scale = 10,
+  print_message = TRUE)
 }
 \arguments{
 \item{input_data}{Low dimensional representation of single cell from one data type as the input for matching (e.g., PCs from scRNA-seq data).}

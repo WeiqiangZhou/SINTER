@@ -7,7 +7,9 @@ Maintainer: Weiqiang Zhou <wzhou14@jhu.edu>
 Description: SINTER.
 URL: https://github.com/WeiqiangZhou/SINTER
 Depends: R (>= 3.2.3)
+biocViews:
+Imports: gam, ggplot2, irlba, scran, GenomicAlignments, GenomicRanges, matrixStats, parallel, preprocessCore
 License: GPL(>=2)
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.0.1.9000
+RoxygenNote: 6.1.1
